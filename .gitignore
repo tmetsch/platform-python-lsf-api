@@ -1,5 +1,6 @@
 build/
 dist/
 pylsf/*.c
+pylsf/*.py
 *.pyc
 *~
