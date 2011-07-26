@@ -52,6 +52,15 @@ Not tested: ls_sharedresourceinfo, ls_placereq, ls_placeofhosts, ls_loadadj,
             ls_insertltask, ls_deletertask, ls_deleteltask, all remote 
             execution routines
 
+Convenient routines
+-------------------
+
+The following routines where added for your convenience:
+
+  * get_host_load() - return a list of hostLoad objects
+  * get_host_names() - return the name of the hosts in the cluster
+  * get_host_info() - return a list of hostInfo objects
+
 Notes
 -----
 
