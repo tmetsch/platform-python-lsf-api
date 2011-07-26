@@ -21,14 +21,15 @@
 
 /* File: lsf.i */
 %module lsf
+%include "cpointer.i"
 
 %{
+#define SWIG_FILE_WITH_INIT
 #include "/opt/platform/lsf/8.0/include/lsf/lsf.h"
 #include "/opt/platform/lsf/8.0/include/lsf/lsbatch.h"
 %}
 
-// Needed for ls_load, ls_loadinfo, etc
-%apply int *INPUT { int * numhosts };
+%pointer_functions(int, intp)
 
 // howto handle char **
 %typemap(in) char ** {
@@ -125,3 +126,64 @@
 %include "/opt/platform/lsf/8.0/include/lsf/lsf.h"
 %include "/opt/platform/lsf/8.0/include/lsf/lsbatch.h"
 
+%inline %{
+PyObject * get_host_names() {
+    struct hostInfo *hostinfo; 
+    char   *resreq; 
+    int    numhosts = 0; 
+    int    options = 0; 
+    
+    resreq="";
+
+    hostinfo = ls_gethostinfo(resreq, &numhosts, NULL, 0, options);      
+    
+    PyObject *result = PyList_New(numhosts);
+    int i;
+    for (i = 0; i < numhosts; i++) { 
+        PyObject *o = PyString_FromString(hostinfo[i].hostName);
+        PyList_SetItem(result,i,o);
+    }
+    
+    return result;
+}
+
+PyObject * get_host_info() {
+    struct hostInfo *hostinfo; 
+    char   *resreq; 
+    int    numhosts = 0; 
+    int    options = 0; 
+    
+    resreq = "";
+
+    hostinfo = ls_gethostinfo(resreq, &numhosts, NULL, 0, options);     
+         
+    PyObject *result = PyList_New(numhosts);
+    int i;
+    for (i = 0; i < numhosts; i++) {
+        PyObject *o = SWIG_NewPointerObj(SWIG_as_voidptr(&hostinfo[i]), SWIGTYPE_p_hostInfo, 0 |  0 );
+        PyList_SetItem(result,i,o);
+    }
+    
+    return result;
+}    
+
+PyObject * get_host_load() {
+    struct hostLoad *hostload; 
+    char   *resreq; 
+    int    numhosts = 0; 
+    int    options = 0; 
+    
+    resreq = "";
+
+    hostload = ls_loadofhosts(resreq, &numhosts, 0, NULL, NULL, 0);
+         
+    PyObject *result = PyList_New(numhosts);
+    int i;
+    for (i = 0; i < numhosts; i++) {
+        PyObject *o = SWIG_NewPointerObj(SWIG_as_voidptr(&hostload[i]), SWIGTYPE_p_hostLoad, 0 |  0 );
+        PyList_SetItem(result,i,o);
+    }
+    
+    return result;
+}     
+%}
