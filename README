@@ -16,9 +16,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 # 
 
----------------------------
 Python wrapper for LSF APIs
----------------------------
+===========================
 
 This library allows you to call the LSF APIs from Python. The wrapper is created
 by using SWIG. Some commands are left out and some typemaps are defined. Still
@@ -27,21 +26,42 @@ tested and support calls.
 
 The following calls are tested and known to work reasonably well:
 
- * ls_getclustername
- * ls_initrex
- * ls_rexecv
+Included from batch.h
+---------------------
 
- * lsb_init
- * lsb_lsb_submit
- * lsb_signaljob
- * lsb_peekjob
+  * lsb_init
+  * lsb_submit
 
-The project is structured as follows
+Included from lsf.h
+-------------------
 
-Name       Description
---------
-README     This file
-lsf.i      SWIK Interface
-Makefile   Makefile for creation of the shared library.
+  * ls_info
+  * ls_getclustername
+  * ls_getmastername
+  * ls_gethosttype
+  * ls_gethostmodel 
+  * ls_gethostinfo
+  * ls_loadinfo
+  * ls_load
+  * ls_loadofhosts
+
+Unknown: ls_getmodelfactor, ls_gethostfactor
+
+Not tested: ls_sharedresourceinfo, ls_placereq, ls_placeofhosts, ls_loadadj, 
+            ls_eligible, ls_listrtask, ls_listltask, ls_insertrtask, 
+            ls_insertltask, ls_deletertask, ls_deleteltask, all remote 
+            execution routines
+
+Notes
+-----
+
+  * It might be needed to set PYTHONPATH (pointing to the _lsf.so dir) and 
+    LD_LIBRARY_PATH correctly (LSF_LIBDIR needs to be included)
+
+  * On solaris use 'export LD_PRELOAD=libsocket.so.1' and 
+    '/usr/bin/amd64/python'
+
+  * Why not using ctypes? Because the LSF libs tend to have undefined vars on 
+    some platforms. The SWIG approach is more flexible to that issue.
 
 (c) 2010-2011 Platform Computing

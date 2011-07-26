@@ -17,13 +17,13 @@
 # 
 
 CC = gcc
-LSF_LIBDIR = /opt/platform/lsf/8.0/linux2.6-glibc2.3-x86_64/lib
+LSF_LIBDIR = /opt/platform/lsf/8.0/x86-64-sol10/lib
 PYTHON_LIBDIR = /usr/include/python2.6
 
 PROJECT = _lsf.so
 OBJECTS = lsf_wrap.o
 
-CFLAGS  = -fPIC -I$(PYTHON_LIBDIR)
+CFLAGS  = -m64 -fPIC -I$(PYTHON_LIBDIR)
 LDFLAGS = $(LSF_LIBDIR)/liblsf.a $(LSF_LIBDIR)/libbat.a $(LSF_LIBDIR)/libfairshareadjust.so $(LSF_LIBDIR)/liblsbstream.so -lc -lnsl
 
 all: $(PROJECT)

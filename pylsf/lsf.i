@@ -23,31 +23,12 @@
 %module lsf
 
 %{
-#define SWIG_FILE_WITH_INIT
 #include "/opt/platform/lsf/8.0/include/lsf/lsf.h"
 #include "/opt/platform/lsf/8.0/include/lsf/lsbatch.h"
 %}
 
-%ignore ls_placeoftype;
-%ignore ls_loadoftype;
-%ignore ls_lostconnection;
-%ignore ls_gethostrespriority;
-%ignore ls_verrlog;
-%ignore getBEtime;
-%ignore ls_nioinit;
-%ignore ls_nioselect;
-%ignore ls_nioctl;
-%ignore ls_nionewtask;
-%ignore ls_nioremovetask;
-%ignore ls_niowrite;
-%ignore ls_nioclose;
-%ignore ls_nioread;
-%ignore ls_niotasks;
-%ignore ls_niostatus;
-%ignore ls_niokill;
-%ignore ls_niosetdebug;
-%ignore ls_niodump;
-%ignore ls_readrexlog;
+// Needed for ls_load, ls_loadinfo, etc
+%apply int *INPUT { int * numhosts };
 
 // howto handle char **
 %typemap(in) char ** {
@@ -66,6 +47,34 @@
   free((char *) $1);
 }
 
+// handle int arrays
+%typemap(in) int [ANY] (int temp[$1_dim0]) {
+  int i;
+  for (i = 0; i < $1_dim0; i++) {
+    PyObject *o = PySequence_GetItem($input,i);
+      temp[i] = (int) PyInt_AsLong(o);
+  }
+  $1 = temp;
+}
+
+// allow to set members of int array
+%typemap(memberin) int [ANY] {
+  int i;
+  for (i = 0; i < $1_dim0; i++) {
+      $1[i] = $input[i];
+  }
+}
+
+// access int arrays
+%typemap(out) int [ANY] {
+  int i;
+  $result = PyList_New($1_dim0);
+  for (i = 0; i < $1_dim0; i++) {
+    PyObject *o = PyLong_FromDouble((int) $1[i]);
+    PyList_SetItem($result,i,o);
+  }
+}
+
 // typemap for time_t
 %typemap(in) time_t {
     $1 = (time_t) PyLong_AsLong($input);
@@ -79,32 +88,40 @@
     free((time_t *) $1);
 }
 
-// handle int arrays in struct...
-%typemap(in) int [ANY] (int temp[$1_dim0]) {
-  int i;
-  for (i = 0; i < $1_dim0; i++) {
-    PyObject *o = PySequence_GetItem($input,i);
-      temp[i] = (int) PyInt_AsLong(o);
-  }
-  $1 = temp;
-}
-// allow to set members of int array
-%typemap(memberin) int [ANY] {
-  int i;
-  for (i = 0; i < $1_dim0; i++) {
-      $1[i] = $input[i];
-  }
-}
-// access int arrays
-%typemap(out) int [ANY] {
-  int i;
-  $result = PyList_New($1_dim0);
-  for (i = 0; i < $1_dim0; i++) {
-    PyObject *o = PyLong_FromDouble((int) $1[i]);
-    PyList_SetItem($result,i,o);
-  }
-}
+/* 
+ The following routines are not wrapped because SWIG has issues generating 
+ proper code for them 
+ */
 
-//
+// Following are ignored from lsf.h
+
+%ignore getBEtime;
+%ignore ls_gethostrespriority;
+%ignore ls_loadoftype;
+%ignore ls_lostconnection;
+%ignore ls_nioclose;
+%ignore ls_nioctl;
+%ignore ls_niodump;
+%ignore ls_nioinit;
+%ignore ls_niokill;
+%ignore ls_nionewtask;
+%ignore ls_nioread;
+%ignore ls_nioremovetask;
+%ignore ls_nioselect;
+%ignore ls_niosetdebug;
+%ignore ls_niostatus;
+%ignore ls_niotasks;
+%ignore ls_niowrite;
+%ignore ls_placeoftype;
+%ignore ls_readrexlog;
+%ignore ls_verrlog;
+
+// Following are ignored from lsbatch.h
+
+%ignore lsb_readstatusline;
+
+// Now include the rest...
+
 %include "/opt/platform/lsf/8.0/include/lsf/lsf.h"
 %include "/opt/platform/lsf/8.0/include/lsf/lsbatch.h"
+
