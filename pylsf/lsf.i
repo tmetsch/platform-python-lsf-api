@@ -18,7 +18,6 @@
  * 
  */
 
-
 /* File: lsf.i */
 %module lsf
 %include "cpointer.i"
@@ -43,7 +42,16 @@
     $1[i] = 0;
 }
 
-// cleanup of char **
+%typemap(out) char ** {
+  int len,i;
+  len = 0;
+  while ($1[len]) len++;
+  $result = PyList_New(len);
+  for (i = 0; i < len; i++) {
+    PyList_SetItem($result,i,PyString_FromString($1[i]));
+  }
+}
+
 %typemap(freearg) char ** {
   free((char *) $1);
 }
