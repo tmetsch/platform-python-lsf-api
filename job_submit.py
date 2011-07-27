@@ -1,5 +1,6 @@
 from pylsf import lsf
-    
+
+
 def run_job(command):
     """
     Run a job...
@@ -10,7 +11,7 @@ def run_job(command):
     submitreq.options2 = 0
 
     limits = []
-    for i in range (0, lsf.LSF_RLIM_NLIMITS):
+    for i in range(0, lsf.LSF_RLIM_NLIMITS):
         limits.append(lsf.DEFAULT_RLIMIT)
 
     submitreq.rLimits = limits
@@ -27,6 +28,7 @@ def run_job(command):
 
     job_id = lsf.lsb_submit(submitreq, submitreply)
     return job_id
+
 
 if __name__ == '__main__':
     print("LSF Clustername is :", lsf.ls_getclustername())

@@ -29,6 +29,7 @@
 %}
 
 %pointer_functions(int, intp)
+%pointer_functions(float, floatp)
 
 // howto handle char **
 %typemap(in) char ** {
@@ -96,6 +97,16 @@
 %typemap(freearg) time_t {
     free((time_t *) $1);
 }
+
+%typemap(out) float [ANY] {
+  int i;
+  $result = PyList_New($1_dim0);
+  for (i = 0; i < $1_dim0; i++) {
+    PyObject *o = PyFloat_FromDouble((double) $1[i]);
+    PyList_SetItem($result,i,o);
+  }
+}
+
 
 /* 
  The following routines are not wrapped because SWIG has issues generating 
@@ -193,5 +204,5 @@ PyObject * get_host_load() {
     }
     
     return result;
-}     
+}
 %}
