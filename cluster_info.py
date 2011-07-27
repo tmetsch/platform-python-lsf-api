@@ -17,9 +17,9 @@ for info in lsf.get_host_info():
         # Note: this is only the load for r15s
         load = lsf.floatp_value(hostLoad.li)
         if load >= 65535:
-            load = -1
+            load = -1.0
     else:
-        load = -1
+        load = 0.0
 
     print '{0:15s} {1:10s} {2:10s} {3:5d} {4:4.2f}'.format(info.hostName,
                                                            info.hostType,
