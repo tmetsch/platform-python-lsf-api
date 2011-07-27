@@ -14,6 +14,7 @@ for info in lsf.get_host_info():
     hostLoad = lsf.ls_loadofhosts('hname=' + info.hostName, c, 0, None, None,
                                   0)
     if hostLoad is not None:
+        # Note: this is only the load for r15s
         load = lsf.floatp_value(hostLoad.li)
         if load >= 65535:
             load = -1
