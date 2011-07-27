@@ -8,11 +8,11 @@ print '{0:15s} {1:10s} {2:10s} {3:5s} {4:4s}'.format('Hostname', 'Type',
                                                      'Model', 'Cores', 'Load')
 
 
+c = lsf.new_intp()
 for info in lsf.get_host_info():
 
-    c = lsf.new_intp()
-    hostLoad = lsf.ls_loadofhosts('hname=' + info.hostName, c, 0, None, None,
-                                  0)
+    hostLoad = lsf.ls_loadofhosts('hname=' + info.hostName, c, 0, None, [], 0)
+
     if hostLoad is not None:
         # Note: this is only the load for r15s
         load = lsf.floatp_value(hostLoad.li)
@@ -29,3 +29,5 @@ for info in lsf.get_host_info():
 
     if info.nRes > 0:
         print '+--> Resources:', info.resources
+
+lsf.delete_intp(c)

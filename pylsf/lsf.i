@@ -33,14 +33,29 @@
 
 // howto handle char **
 %typemap(in) char ** {
+  if (PyList_Check($input)) {
     int size = PyList_Size($input);
     int i = 0;
     $1 = (char **) malloc((size+1)*sizeof(char *));
     for (i = 0; i < size; i++) {
       PyObject *o = PyList_GetItem($input,i);
-      $1[i] = PyBytes_AsString(PyUnicode_AsUTF8String(PyList_GetItem($input,i)));
+      if (PyString_Check(o))
+	$1[i] = PyString_AsString(PyList_GetItem($input,i));
+      else {
+	PyErr_SetString(PyExc_TypeError,"list must contain strings");
+	free($1);
+	return NULL;
+      }
     }
     $1[i] = 0;
+  } else {
+    PyErr_SetString(PyExc_TypeError,"not a list");
+    return NULL;
+  }
+}
+
+%typemap(freearg) char ** {
+  free((char *) $1);
 }
 
 %typemap(out) char ** {
@@ -53,10 +68,6 @@
   }
 }
 
-%typemap(freearg) char ** {
-  free((char *) $1);
-}
-
 // handle int arrays
 %typemap(in) int [ANY] (int temp[$1_dim0]) {
   int i;
@@ -67,15 +78,10 @@
   $1 = temp;
 }
 
-// allow to set members of int array
-%typemap(memberin) int [ANY] {
-  int i;
-  for (i = 0; i < $1_dim0; i++) {
-      $1[i] = $input[i];
-  }
+%typemap(freearg) int [ANY] {
+  free((int *) $1);
 }
 
-// access int arrays
 %typemap(out) int [ANY] {
   int i;
   $result = PyList_New($1_dim0);
@@ -90,23 +96,13 @@
     $1 = (time_t) PyLong_AsLong($input);
 }
 
-%typemap(out) time_t {
-    $result = PyLong_FromLong((long)$1);
-}
-
 %typemap(freearg) time_t {
     free((time_t *) $1);
 }
 
-%typemap(out) float [ANY] {
-  int i;
-  $result = PyList_New($1_dim0);
-  for (i = 0; i < $1_dim0; i++) {
-    PyObject *o = PyFloat_FromDouble((double) $1[i]);
-    PyList_SetItem($result,i,o);
-  }
+%typemap(out) time_t {
+    $result = PyLong_FromLong((long)$1);
 }
-
 
 /* 
  The following routines are not wrapped because SWIG has issues generating 
@@ -179,7 +175,8 @@ PyObject * get_host_info() {
     PyObject *result = PyList_New(numhosts);
     int i;
     for (i = 0; i < numhosts; i++) {
-        PyObject *o = SWIG_NewPointerObj(SWIG_as_voidptr(&hostinfo[i]), SWIGTYPE_p_hostInfo, 0 |  0 );
+        PyObject *o = SWIG_NewPointerObj(SWIG_as_voidptr(&hostinfo[i]), 
+                                         SWIGTYPE_p_hostInfo, 0 |  0 );
         PyList_SetItem(result,i,o);
     }
     
@@ -199,7 +196,8 @@ PyObject * get_host_load() {
     PyObject *result = PyList_New(numhosts);
     int i;
     for (i = 0; i < numhosts; i++) {
-        PyObject *o = SWIG_NewPointerObj(SWIG_as_voidptr(&hostload[i]), SWIGTYPE_p_hostLoad, 0 |  0 );
+        PyObject *o = SWIG_NewPointerObj(SWIG_as_voidptr(&hostload[i]),
+                                         SWIGTYPE_p_hostLoad, 0 |  0 );
         PyList_SetItem(result,i,o);
     }
     
