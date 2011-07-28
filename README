@@ -58,7 +58,25 @@ Convenient routines
 The following routines where added for your convenience:
 
   * get_load_of_hosts() - return a list of hostLoad objects
-  * get_host_load() - return the current values of the resources of a host
+  * get_host_load() - return the current values of the resources of a host - 
+                      Possible resource names (Use lsf.<name>) values:
+  
+        R15S - 15s exponentially averaged CPU run queue length.
+        R1M - 1m exponentially averaged CPU run queue  length.
+        R15M - 15m exponentially averaged CPU run queue length.
+        UT - CPU utilization exponentially averaged over the last 
+             minute (from 0.0 to 1.0).
+        PG - Memory paging rate exponentially averaged over the last minute, 
+             in pages per second.
+        IO - Disk I/O rate exponentially averaged over the last minute, 
+             in KBytes per second.
+        LS - Number of current login users.
+        IT - Idle time of the host (keyboard not touched on all logged in
+             sessions), in minutes.
+        TMP - Available free disk space in /tmp, in MBytes.
+        SWP - Amount of currently available swap space, in MBytes.
+        MEM - Amount of currently available memory, in MBytes.
+  
   * get_host_names() - return the name of the hosts in the cluster
   * get_host_info() - return a list of hostInfo objects
 
