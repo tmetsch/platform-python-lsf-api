@@ -187,7 +187,6 @@ PyObject * get_host_load() {
     struct hostLoad *hostload; 
     char   *resreq; 
     int    numhosts = 0; 
-    int    options = 0; 
     
     resreq = "";
 
