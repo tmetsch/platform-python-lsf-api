@@ -1,3 +1,4 @@
+
 /*
  * 
  * Copyright (C) 2010-2011 Platform Computing
@@ -78,9 +79,9 @@
   $1 = temp;
 }
 
-//%typemap(freearg) int [ANY] {
-//  free((int *) $1);
-//}
+%typemap(freearg) int [ANY] {
+  free((int *) $1);
+}
 
 %typemap(out) int [ANY] {
   int i;
@@ -183,10 +184,11 @@ PyObject * get_host_info() {
     return result;
 }    
 
-PyObject * get_host_load() {
+PyObject * get_load_of_hosts() {
     struct hostLoad *hostload; 
     char   *resreq; 
     int    numhosts = 0; 
+    int    options = 0; 
     
     resreq = "";
 
@@ -200,6 +202,26 @@ PyObject * get_host_load() {
         PyList_SetItem(result,i,o);
     }
     
+    return result;
+}
+
+PyObject * get_host_load(char *resreq, int index) {
+    struct hostLoad *hosts; 
+
+    int    numhosts = 0; 
+
+    int    options = 0; 
+
+    char   *fromhost = NULL; 
+
+    hosts = ls_load(resreq, &numhosts, options, fromhost); 
+
+    if (hosts == NULL || numhosts > 1) { 
+        ls_perror("ls_load"); 
+        exit(-1); 
+    }
+
+    PyObject *result = PyFloat_FromDouble(hosts[0].li[index]);
     return result;
 }
 %}

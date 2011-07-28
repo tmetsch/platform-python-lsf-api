@@ -7,19 +7,11 @@ print '\n Hosts in cluster: ', lsf.get_host_names(), '\n'
 print '{0:15s} {1:10s} {2:10s} {3:5s} {4:4s}'.format('Hostname', 'Type',
                                                      'Model', 'Cores', 'Load')
 
-
-c = lsf.new_intp()
 for info in lsf.get_host_info():
 
-    hostLoad = lsf.ls_loadofhosts('hname=' + info.hostName, c, 0, None, [], 0)
-
-    if hostLoad is not None:
-        # Note: this is only the load for r15s
-        load = lsf.floatp_value(hostLoad.li)
-        if load >= 65535:
-            load = -1.0
-    else:
-        load = 0.0
+    load = lsf.get_host_load("hname=" + info.hostName, lsf.R15M)
+    if load >= 65535:
+        load = -1
 
     print '{0:15s} {1:10s} {2:10s} {3:5d} {4:4.2f}'.format(info.hostName,
                                                            info.hostType,
@@ -29,5 +21,3 @@ for info in lsf.get_host_info():
 
     if info.nRes > 0:
         print '+--> Resources:', info.resources
-
-lsf.delete_intp(c)
