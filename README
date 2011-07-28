@@ -57,7 +57,8 @@ Convenient routines
 
 The following routines where added for your convenience:
 
-  * get_host_load() - return a list of hostLoad objects
+  * get_load_of_hosts() - return a list of hostLoad objects
+  * get_host_load() - return the current values of the resources of a host
   * get_host_names() - return the name of the hosts in the cluster
   * get_host_info() - return a list of hostInfo objects
 
