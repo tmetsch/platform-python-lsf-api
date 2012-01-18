@@ -1,7 +1,7 @@
 build/
 dist/
-pylsf/*.c
-pylsf/*.py
+paltform-lsf/*.c
+paltform-lsf/*.py
 *.pyc
 *~
 .project*
