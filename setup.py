@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # 
-# Copyright (C) 2010-2011 Platform Computing
+# Copyright (C) 2010-2012 Platform Computing
 # 
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -25,15 +25,15 @@ setup(name='platform-python-lsf-api',
       license='LGPL',
       keywords='LSF,Grid,Cluster,HPC',
       url='http://www.platform.com',
-      ext_package='lsf',
-      ext_modules=[Extension('_lsf', ['lsf/lsf.i'],
+      ext_package='pythonlsf',
+      ext_modules=[Extension('_lsf', ['pythonlsf/lsf.i'],
                                include_dirs=['/usr/include/python2.6'],
                                library_dirs=['/usr/share/lsf/8.0/linux2.6-glibc2.3-x86_64/lib/'],
-                               #extra_compile_args=['-m64'],			
-                               #extra_link_args=['-m64'],
+                               extra_compile_args=['-m64'],			
+                               extra_link_args=['-m64'],
                                libraries=['c', 'nsl', 'lsf', 'bat',
                                             'fairshareadjust', 'lsbstream'])],
-      py_modules=['lsf.lsf'],
+      py_modules=['pythonlsf.lsf'],
       classifiers=["Development Status :: 2 - Pre-Alpha",
                      "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
                      "Operating System :: OS Independent",

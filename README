@@ -1,5 +1,5 @@
 # 
-# Copyright (C) 2010-2011 Platform Computing
+# Copyright (C) 2010-2012 Platform Computing
 # 
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -92,4 +92,4 @@ Notes
   * Why not using ctypes? Because the LSF libs tend to have undefined vars on 
     some platforms. The SWIG approach is more flexible to that issue.
 
-(c) 2010-2011 Platform Computing
+(c) 2010-2012 Platform Computing
