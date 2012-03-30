@@ -1,6 +1,6 @@
 #!/usr/local/bin/python2.7
 
-from paltform-lsf import lsf
+from lsf import lsf
 
 
 def run_job(command):

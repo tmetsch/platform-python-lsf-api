@@ -1,6 +1,6 @@
 #!/usr/local/bin/python2.7
 
-from paltform-lsf import lsf
+from lsf import lsf
 
 print '\n Hosts in cluster: ', lsf.get_host_names()
 
