@@ -19,6 +19,8 @@
 /* File: lsf.i */
 %module lsf
 %include "cpointer.i"
+%include "carrays.i"
+
 
 %{
 #define SWIG_FILE_WITH_INIT
@@ -29,9 +31,13 @@
 %pointer_functions(int, intp)
 %pointer_functions(float, floatp)
 
+%array_class(struct queueInfoEnt, queueInfoEntArray);
+
 // howto handle char **
 %typemap(in) char ** {
-  if (PyList_Check($input)) {
+  if ($input == Py_None) {
+    $1 = NULL;
+  } else if (PyList_Check($input)) {
     int size = PyList_Size($input);
     int i = 0;
     $1 = (char **) malloc((size+1)*sizeof(char *));
