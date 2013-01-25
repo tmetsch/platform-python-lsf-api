@@ -32,6 +32,7 @@
 %pointer_functions(float, floatp)
 
 %array_class(struct queueInfoEnt, queueInfoEntArray);
+%array_class(struct hostInfoEnt, hostInfoEntArray);
 
 // howto handle char **
 %typemap(in) char ** {
